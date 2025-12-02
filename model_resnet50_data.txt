@@ -1,0 +1,166 @@
+
+✅ Malli ladattu onnistuneesti!
+
+================================================================================
+RESNET50 MALLIN RAKENNE JA TIEDOT
+================================================================================
+
+📊 YLEISTIEDOT:
+--------------------------------------------------------------------------------
+Parametreja yhteensä: 23,555,159
+Koulutettavia parametreja: 23,555,159
+Muistinkäyttö (arvio): 89.86 MB (32-bit float)
+
+📊 VERTAILU RESNET18:aan:
+ResNet18 parametreja: 11,689,512
+ResNet50 parametreja: 23,555,159
+Ero: 11,865,647 parametria enemmän
+ResNet50 on 2.0x suurempi kuin ResNet18
+
+🏗️  MALLIN KERROSRAKENNE:
+--------------------------------------------------------------------------------
+
+ResNet50 koostuu seuraavista pääosista:
+
+1. ALKUKERROKSET (Initial Layers):
+   └─ conv1: Konvoluutio 7x7, 64 suodatinta
+   └─ bn1: Batch Normalization
+   └─ relu: ReLU aktivaatio
+   └─ maxpool: Max Pooling 3x3
+
+2. RESIDUAL BLOCKS (4 ryhmää) - HUOM: Bottleneck-rakenne!
+   └─ layer1: 3x Bottleneck (256 kanavaa) [3 kerrosta per block]
+   └─ layer2: 4x Bottleneck (512 kanavaa) [4 kerrosta per block]
+   └─ layer3: 6x Bottleneck (1024 kanavaa) [6 kerrosta per block]
+   └─ layer4: 3x Bottleneck (2048 kanavaa) [3 kerrosta per block]
+   Yhteensä: 3+4+6+3 = 16 Bottleneck-blokkia × 3 kerrosta = 48 kerrosta
+
+3. LUOKITTELUKERROKSET (Classification):
+   └─ avgpool: Adaptive Average Pooling
+   └─ fc: Fully Connected (2048 → 23 luokkaa)
+
+💡 RESNET18 vs RESNET50 ERO:
+   ResNet18: BasicBlock (2 conv-kerrosta per block)
+   ResNet50: Bottleneck (3 conv-kerrosta per block)
+   ResNet50 on syvempi ja tehokkaampi mutta hitaampi!
+
+
+📋 YKSITYISKOHTAINEN KERROSLISTAUS:
+--------------------------------------------------------------------------------
+
+conv1:
+  └─ Conv2d (9,408 parametria)
+
+bn1:
+  └─ BatchNorm2d (128 parametria)
+
+relu:
+  └─ ReLU (0 parametria)
+
+maxpool:
+  └─ MaxPool2d (0 parametria)
+
+layer1:
+  └─ 0: Bottleneck (75,008 parametria)
+  └─ 1: Bottleneck (70,400 parametria)
+  └─ 2: Bottleneck (70,400 parametria)
+
+layer2:
+  └─ 0: Bottleneck (379,392 parametria)
+  └─ 1: Bottleneck (280,064 parametria)
+  └─ 2: Bottleneck (280,064 parametria)
+  └─ 3: Bottleneck (280,064 parametria)
+
+layer3:
+  └─ 0: Bottleneck (1,512,448 parametria)
+  └─ 1: Bottleneck (1,117,184 parametria)
+  └─ 2: Bottleneck (1,117,184 parametria)
+  └─ 3: Bottleneck (1,117,184 parametria)
+  └─ 4: Bottleneck (1,117,184 parametria)
+  └─ 5: Bottleneck (1,117,184 parametria)
+
+layer4:
+  └─ 0: Bottleneck (6,039,552 parametria)
+  └─ 1: Bottleneck (4,462,592 parametria)
+  └─ 2: Bottleneck (4,462,592 parametria)
+
+avgpool:
+  └─ AdaptiveAvgPool2d (0 parametria)
+
+fc:
+  └─ Linear (47,127 parametria)
+
+
+🎯 LUOKITTELUKERROS (fc - Fully Connected):
+--------------------------------------------------------------------------------
+Input-ominaisuuksia: 2048
+Output-luokkia: 23
+Painojen muoto: torch.Size([23, 2048])
+Bias-muoto: torch.Size([23])
+Parametreja: 47,127
+
+💡 HUOM: ResNet50 tuottaa 2048 ominaisuutta (vs ResNet18: 512)
+   Tämä antaa mallille enemmän 'oppimiskapasiteettia'!
+
+
+💡 MITEN MALLI TOIMII:
+--------------------------------------------------------------------------------
+Syöte: Kuva (3 x 224 x 224) - RGB-kuva 224x224 pikseliä
+       ↓
+Konvoluutiokerrokset ja pooling pienentävät kuvaa
+       ↓
+Bottleneck residual blockit oppivat SYVEMPIÄ kuvan piirteitä
+       ↓
+Average pooling → (2048 ominaisuutta) [vs ResNet18: 512]
+       ↓
+Fully Connected → (23 luokkaa)
+       ↓
+Tulos: 23 todennäköisyyttä (yksi per puulaji)
+
+
+📈 PAINOJEN TILASTOTIEDOT:
+--------------------------------------------------------------------------------
+fc.weight keskiarvo: -0.001912
+fc.weight keskihajonta: 0.014561
+fc.weight min: -0.037559
+fc.weight max: 0.034032
+fc.bias keskiarvo: -0.000018
+
+
+🧪 TESTIESIMERKKI:
+--------------------------------------------------------------------------------
+Luodaan satunnainen testikuva...
+Syötteen muoto: torch.Size([1, 3, 224, 224])
+Tulosteen muoto: torch.Size([1, 23])
+Tulosteen arvot (logit): [ 0.05990916 -0.05791385 -0.17815042 -0.22943388 -0.121556  ] ... (näytetään 5 ensimmäistä)
+
+Eniten todennäköinen luokka: 22 (todennäköisyys: 0.0531)
+
+
+⏱️  KOULUTUSAJAN VERTAILU (Projektisi tulokset):
+--------------------------------------------------------------------------------
+ResNet18 (10 epochia): ~147 min → ~14.7 min/epoch
+ResNet50 (3 epochia):  ~147 min → ~49 min/epoch
+
+ResNet50 on ~3.3x hitaampi per epoch CPU:lla
+Syy: Enemmän parametreja ja syvempi arkkitehtuuri
+
+💡 GPU:lla ero olisi pienempi (ResNet50 ~2-3x hitaampi)
+
+================================================================================
+✅ ANALYYSI VALMIS!
+================================================================================
+
+📊 YHTEENVETO - RESNET18 vs RESNET50:
+--------------------------------------------------------------------------------
+| Ominaisuus           | ResNet18      | ResNet50         |
+|---------------------|---------------|------------------|
+| Parametreja         | ~11.7M        | ~23.6M         |
+| Syvyys              | 18 kerrosta   | 50 kerrosta      |
+| Block-tyyppi        | BasicBlock    | Bottleneck       |
+| FC input            | 512           | 2048             |
+| Nopeus (CPU)        | Nopeampi      | Hitaampi (~3.3x) |
+| Tarkkuus (projektisi)| ~93-94%      | 89.4% (vain 3 ep)|
+| Potentiaali         | Hyvä          | Parempi (>10 ep) |
+--------------------------------------------------------------------------------
+(base) PS C:\HAMK Univercity\neural_networks_tree_project>

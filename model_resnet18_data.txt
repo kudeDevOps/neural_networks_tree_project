@@ -1,0 +1,119 @@
+
+✅ Malli ladattu onnistuneesti!
+
+================================================================================
+RESNET18 MALLIN RAKENNE JA TIEDOT
+================================================================================
+
+📊 YLEISTIEDOT:
+--------------------------------------------------------------------------------
+Parametreja yhteensä: 11,188,311
+Koulutettavia parametreja: 11,188,311
+Muistinkäyttö (arvio): 42.68 MB (32-bit float)
+
+🏗️  MALLIN KERROSRAKENNE:
+--------------------------------------------------------------------------------
+
+ResNet18 koostuu seuraavista pääosista:
+
+1. ALKUKERROKSET (Initial Layers):
+   └─ conv1: Konvoluutio 7x7, 64 suodatinta
+   └─ bn1: Batch Normalization
+   └─ relu: ReLU aktivaatio
+   └─ maxpool: Max Pooling 3x3
+
+2. RESIDUAL BLOCKS (4 ryhmää):
+   └─ layer1: 2x BasicBlock (64 kanavaa)
+   └─ layer2: 2x BasicBlock (128 kanavaa)
+   └─ layer3: 2x BasicBlock (256 kanavaa)
+   └─ layer4: 2x BasicBlock (512 kanavaa)
+
+3. LUOKITTELUKERROKSET (Classification):
+   └─ avgpool: Adaptive Average Pooling
+   └─ fc: Fully Connected (512 → 23 luokkaa)
+
+
+📋 YKSITYISKOHTAINEN KERROSLISTAUS:
+--------------------------------------------------------------------------------
+
+conv1:
+  └─ Conv2d (9,408 parametria)
+
+bn1:
+  └─ BatchNorm2d (128 parametria)
+
+relu:
+  └─ ReLU (0 parametria)
+
+maxpool:
+  └─ MaxPool2d (0 parametria)
+
+layer1:
+  └─ 0: BasicBlock (73,984 parametria)
+  └─ 1: BasicBlock (73,984 parametria)
+
+layer2:
+  └─ 0: BasicBlock (230,144 parametria)
+  └─ 1: BasicBlock (295,424 parametria)
+
+layer3:
+  └─ 0: BasicBlock (919,040 parametria)
+  └─ 1: BasicBlock (1,180,672 parametria)
+
+layer4:
+  └─ 0: BasicBlock (3,673,088 parametria)
+  └─ 1: BasicBlock (4,720,640 parametria)
+
+avgpool:
+  └─ AdaptiveAvgPool2d (0 parametria)
+
+fc:
+  └─ Linear (11,799 parametria)
+
+
+🎯 LUOKITTELUKERROS (fc - Fully Connected):
+--------------------------------------------------------------------------------
+Input-ominaisuuksia: 512
+Output-luokkia: 23
+Painojen muoto: torch.Size([23, 512])
+Bias-muoto: torch.Size([23])
+Parametreja: 11,799
+
+
+💡 MITEN MALLI TOIMII:
+--------------------------------------------------------------------------------
+Syöte: Kuva (3 x 224 x 224) - RGB-kuva 224x224 pikseliä
+       ↓
+Konvoluutiokerrokset ja pooling pienentävät kuvaa
+       ↓
+Residual blockit oppivat kuvan piirteitä
+       ↓
+Average pooling → (512 ominaisuutta)
+       ↓
+Fully Connected → (23 luokkaa)
+       ↓
+Tulos: 23 todennäköisyyttä (yksi per puulaji)
+
+
+📈 PAINOJEN TILASTOTIEDOT:
+--------------------------------------------------------------------------------
+fc.weight keskiarvo: -0.001252
+fc.weight keskihajonta: 0.029053
+fc.weight min: -0.060332
+fc.weight max: 0.055619
+fc.bias keskiarvo: 0.000762
+
+
+🧪 TESTIESIMERKKI:
+--------------------------------------------------------------------------------
+Luodaan satunnainen testikuva...
+Syötteen muoto: torch.Size([1, 3, 224, 224])
+Tulosteen muoto: torch.Size([1, 23])
+Tulosteen arvot (logit): [-3.456117  -2.583655  -2.2017972  0.7145026 -2.4468982] ... (näytetään 5 ensimmäistä)
+
+Eniten todennäköinen luokka: 21 (todennäköisyys: 0.8153)
+
+================================================================================
+✅ ANALYYSI VALMIS!
+================================================================================
+(base) PS C:\HAMK Univercity\neural_networks_tree_project>
